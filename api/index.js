@@ -87,5 +87,4 @@ app.use(
     })
 );
 
-// Vercel requires us to export a function instead of using app.listen()
-module.exports = app;
+module.exports = app; // This is required for Vercel
