@@ -23,13 +23,25 @@ const schema = buildSchema(`
         upload_time: String
     }
 
+    type LatestMangaUpdate {
+        title: String
+        cover: String
+        url: String
+        latest_chapter: String
+        latest_chapter_url: String
+        upload_time: String
+    }
+
     type Query {
         getManga(id: String!): Manga
+        getLatestUpdates: [LatestMangaUpdate]
     }
 `);
 
 const BASE_URL = "https://www.natomanga.com/manga/";
+const HOME_URL = "https://www.natomanga.com/";
 const mangaCache = new Map();
+const latestUpdatesCache = { data: [], timestamp: 0 };
 const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
 
 async function fetchManga(id) {
@@ -75,6 +87,39 @@ async function fetchManga(id) {
     }
 }
 
+async function fetchLatestUpdates() {
+    if (Date.now() - latestUpdatesCache.timestamp < CACHE_DURATION) {
+        console.log("Serving latest updates from cache");
+        return latestUpdatesCache.data;
+    }
+
+    try {
+        const response = await axios.get(HOME_URL);
+        const $ = cheerio.load(response.data);
+        const latestUpdates = [];
+
+        $("#contentstory .itemupdate").each((_, el) => {
+            const title = $(el).find("h3 a").text().trim();
+            const cover = $(el).find("a.cover img").attr("data-src") || $(el).find("a.cover img").attr("src");
+            const url = $(el).find("h3 a").attr("href");
+            const latestChapterElement = $(el).find("li").eq(1);
+            const latest_chapter = latestChapterElement.find("a").text().trim();
+            const latest_chapter_url = latestChapterElement.find("a").attr("href");
+            const upload_time = latestChapterElement.find("i").text().trim();
+
+            latestUpdates.push({ title, cover, url, latest_chapter, latest_chapter_url, upload_time });
+        });
+
+        latestUpdatesCache.data = latestUpdates;
+        latestUpdatesCache.timestamp = Date.now();
+
+        return latestUpdates;
+    } catch (error) {
+        console.error("Error fetching latest updates:", error);
+        return [];
+    }
+}
+
 const app = express();
 app.use(cors());
 
@@ -82,7 +127,10 @@ app.use(
     "/graphql",
     graphqlHTTP({
         schema,
-        rootValue: { getManga: async ({ id }) => await fetchManga(id) },
+        rootValue: { 
+            getManga: async ({ id }) => await fetchManga(id),
+            getLatestUpdates: async () => await fetchLatestUpdates()
+        },
         graphiql: true,
     })
 );
