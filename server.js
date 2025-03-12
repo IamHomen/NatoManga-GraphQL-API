@@ -31,15 +31,25 @@ const schema = buildSchema(`
         latest_chapter_url: String
         upload_time: String
     }
-
+    type HotManga {
+        title: String
+        cover: String
+        url: String
+        latestChapter: String
+        latestChapterUrl: String
+        views: String
+        description: String
+    }
     type Query {
         getManga(id: String!): Manga
         getLatestUpdates: [LatestMangaUpdate]
+        getHotManga: [HotManga]
     }
 `);
 
 const BASE_URL = "https://www.natomanga.com/manga/";
 const HOME_URL = "https://www.natomanga.com/";
+const HOT_MANGA_URL = "https://www.natomanga.com/manga-list/hot-manga";
 const mangaCache = new Map();
 const latestUpdatesCache = { data: [], timestamp: 0 };
 const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
@@ -116,6 +126,29 @@ async function fetchLatestUpdates() {
         return latestUpdates;
     } catch (error) {
         console.error("Error fetching latest updates:", error);
+        return [];
+    }
+}
+async function fetchHotManga() {
+    try {
+        const response = await axios.get(HOT_MANGA_URL);
+        const $ = cheerio.load(response.data);
+        const hotManga = [];
+
+        $(".truyen-list .list-truyen-item-wrap").each((_, el) => {
+            hotManga.push({
+                title: $(el).find("h3 a").text().trim(),
+                cover: $(el).find(".cover img").attr("src"),
+                url: $(el).find("h3 a").attr("href"),
+                latestChapter: $(el).find(".list-story-item-wrap-chapter").text().trim(),
+                latestChapterUrl: $(el).find(".list-story-item-wrap-chapter").attr("href"),
+                views: $(el).find(".aye_icon").text().trim(),
+                description: $(el).find("p").text().trim(),
+            });
+        });
+        return hotManga;
+    } catch (error) {
+        console.error("Error fetching hot manga:", error);
         return [];
     }
 }
