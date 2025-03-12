@@ -10,9 +10,13 @@ A **lightweight** GraphQL API for fetching manga updates from [Natomanga](https:
 
 ## 🚀 Features
 ✅ Fetch manga details by ID
+
 ✅ Get latest updated manga
+
 ✅ Get hot manga list
+
 ✅ Efficient caching (10 mins)
+
 ✅ Fast and lightweight
 
 ---
