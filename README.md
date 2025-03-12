@@ -24,8 +24,8 @@ A **lightweight** GraphQL API for fetching manga updates from [Natomanga](https:
 ## 🛠 Installation
 
 ### **Prerequisites**
-- **Node.js** `v14+`
-- **NPM** `v6+`
+- **Node.js** `v22+`
+- **NPM** `v10+`
 
 ### **Setup**
 ```bash
