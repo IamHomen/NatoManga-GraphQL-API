@@ -162,7 +162,8 @@ app.use(
         schema,
         rootValue: { 
             getManga: async ({ id }) => await fetchManga(id),
-            getLatestUpdates: async () => await fetchLatestUpdates()
+            getLatestUpdates: async () => await fetchLatestUpdates(),
+            getHotManga: async () => await fetchHotManga()
         },
         graphiql: true,
     })
