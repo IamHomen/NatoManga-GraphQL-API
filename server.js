@@ -169,6 +169,30 @@ app.use(
     })
 );
 
+app.get("/proxy-image", async (req, res) => {
+    const imageUrl = req.query.url;
+    if (!imageUrl) {
+        return res.status(400).send("Missing image URL.");
+    }
+
+    try {
+        const response = await axios.get(decodeURIComponent(imageUrl), {
+            responseType: "arraybuffer",
+            headers: {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+                "Referer": "https://www.natomanga.com/",
+                "Accept-Language": "en-US,en;q=0.9"
+            },
+        });
+
+        res.set("Content-Type", response.headers["content-type"]);
+        res.send(response.data);
+    } catch (error) {
+        console.error("Error fetching image:", error.message);
+        res.status(500).send("Error fetching image.");
+    }
+});
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
