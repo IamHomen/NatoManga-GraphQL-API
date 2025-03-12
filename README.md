@@ -1,10 +1,25 @@
-# 📘 Natomanga GraphQL API
+# 📚 Natomanga GraphQL API
 
 ![GraphQL API](https://img.shields.io/badge/GraphQL-API-blueviolet?style=for-the-badge&logo=graphql)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow?style=for-the-badge&logo=javascript)
 ![Express.js](https://img.shields.io/badge/Express.js-API-green?style=for-the-badge&logo=express)
 
 A **lightweight** GraphQL API for fetching manga updates from [Natomanga](https://www.natomanga.com). This API scrapes the latest manga updates using **Cheerio** and **Axios** with built-in **caching** for efficiency.
+
+---
+
+## 📖 Table of Contents
+- [🚀 Features](#-features)
+- [🛠 Installation](#-installation)
+  - [Prerequisites](#prerequisites)
+  - [Setup](#setup)
+- [🔍 GraphQL Queries](#-graphql-queries)
+  - [1️⃣ Fetch Manga by ID](#1%ef%b8%8f-fetch-manga-by-id)
+  - [2️⃣ Fetch Latest Updated Manga](#2%ef%b8%8f-fetch-latest-updated-manga)
+  - [3️⃣ Fetch Hot Manga List](#3%ef%b8%8f-fetch-hot-manga-list)
+- [📜 License](#-license)
+- [🤝 Contributing](#-contributing)
+- [💬 Contact](#-contact)
 
 ---
 
@@ -150,7 +165,7 @@ The API will be available at: **`http://localhost:4000/graphql`**
     "getHotManga": [
       {
         "title": "String",
-        "cover": "Stringp",
+        "cover": "String",
         "url": "String",
         "latest_chapter": "String",
         "latest_chapter_url": "String",
@@ -177,4 +192,3 @@ Pull requests are welcome! If you have any improvements or bug fixes, feel free 
 ## 💬 Contact
 📧 Email: `your@email.com`  
 🐙 GitHub: [YourUsername](https://github.com/yourusername)
-
