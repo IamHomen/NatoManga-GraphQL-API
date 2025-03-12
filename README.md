@@ -74,7 +74,7 @@ The API will be available at: **`http://localhost:4000/graphql`**
   "data": {
     "getManga": {
       "title": "String",
-      "cover": String",
+      "cover": "String",
       "author": "String",
       "status": "String",
       "genres": ["Action", "Adventure"],
