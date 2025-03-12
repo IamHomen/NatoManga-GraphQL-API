@@ -73,18 +73,18 @@ The API will be available at: **`http://localhost:4000/graphql`**
 {
   "data": {
     "getManga": {
-      "title": "Mamono Kurai no Boukensha",
-      "cover": "https://imgs-2.2xstorage.com/thumb/mamono-kurai-no-boukensha.webp",
-      "author": "John Doe",
-      "status": "Ongoing",
+      "title": "String",
+      "cover": String",
+      "author": "String",
+      "status": "String",
       "genres": ["Action", "Adventure"],
-      "description": "A story of a lone adventurer...",
+      "description": "String",
       "chapters": [
         {
-          "title": "Chapter 15",
-          "url": "https://www.natomanga.com/manga/mamono-kurai-no-boukensha/chapter-15",
-          "views": "120,000",
-          "upload_time": "5 minutes ago"
+          "title": "String",
+          "url": "String",
+          "views": "String",
+          "upload_time": "String"
         }
       ]
     }
@@ -114,12 +114,12 @@ The API will be available at: **`http://localhost:4000/graphql`**
   "data": {
     "getLatestManga": [
       {
-        "title": "The Older Sister Should Raise Her Younger Sister",
-        "cover": "https://imgs-2.2xstorage.com/thumb/the-older-sister-should-raise-her-younger-sister.webp",
-        "url": "https://www.natomanga.com/manga/the-older-sister-should-raise-her-younger-sister",
-        "latest_chapter": "Chapter 82",
-        "latest_chapter_url": "https://www.natomanga.com/manga/the-older-sister-should-raise-her-younger-sister/chapter-82",
-        "upload_time": "1 minute ago"
+        "title": "String",
+        "cover": "String",
+        "url": "String",
+        "latest_chapter": "String",
+        "latest_chapter_url": "String",
+        "upload_time": "String"
       }
     ]
   }
@@ -149,13 +149,13 @@ The API will be available at: **`http://localhost:4000/graphql`**
   "data": {
     "getHotManga": [
       {
-        "title": "Martial Peak",
-        "cover": "https://imgs-2.2xstorage.com/thumb/martial-peak.webp",
-        "url": "https://www.natomanga.com/manga/martial-peak",
-        "latest_chapter": "Chapter 3823",
-        "latest_chapter_url": "https://www.natomanga.com/manga/martial-peak/chapter-3823",
-        "views": "725,516,484",
-        "description": "The journey to the martial peak is a lonely, solitary and long one..."
+        "title": "String",
+        "cover": "Stringp",
+        "url": "String",
+        "latest_chapter": "String",
+        "latest_chapter_url": "String",
+        "views": "String",
+        "description": "String"
       }
     ]
   }
