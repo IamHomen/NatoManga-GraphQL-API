@@ -4,6 +4,7 @@ const { buildSchema } = require("graphql");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const cors = require("cors");
+const rateLimit = require('express-rate-limit');
 
 const schema = buildSchema(`
     type Manga {
