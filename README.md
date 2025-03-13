@@ -63,7 +63,7 @@ To ensure fair usage and prevent abuse, the API enforces the following rate limi
 ### **Setup**
 ```bash
 # Clone the repo
-git clone https://github.com/yourusername/natomanga-graphql-api.git
+git clone https://github.com/IamHomen/NatoManga-GraphQL-API.git
 
 # Navigate to the project folder
 cd natomanga-graphql-api
