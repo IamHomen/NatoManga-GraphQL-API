@@ -131,7 +131,7 @@ The API will be available at: **`http://localhost:4000/graphql`**
 #### **Query:**
 ```graphql
 {
-  getLatestManga {
+  getLatestUpdates {
     title
     cover
     url
@@ -145,7 +145,7 @@ The API will be available at: **`http://localhost:4000/graphql`**
 ```json
 {
   "data": {
-    "getLatestManga": [
+    "getLatestUpdates": [
       {
         "title": "String",
         "cover": "String",
