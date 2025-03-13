@@ -10,7 +10,7 @@ A **lightweight** GraphQL API for fetching manga updates from [Natomanga](https:
 
 ## 📖 Table of Contents
 - [🚀 Features](#-features)
-- [🚦 Rate Limit](#-api-rate-limiting)
+- [🚦 Rate Limit](#api-rate-limiting)
 - [🛠 Installation](#-installation)
   - [Prerequisites](#prerequisites)
   - [Setup](#setup)
