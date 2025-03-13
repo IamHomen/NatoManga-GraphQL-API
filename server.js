@@ -155,6 +155,7 @@ async function fetchHotManga() {
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 app.use(
     "/graphql",
@@ -192,6 +193,17 @@ app.get("/proxy-image", async (req, res) => {
         res.status(500).send("Error fetching image.");
     }
 });
+
+// 🚀 Apply rate limiting (e.g., max 100 requests per 15 minutes per IP)
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per window
+    message: { error: "Too many requests, please try again later." },
+    headers: true, // Show rate limit headers in the response
+});
+
+// Apply rate limiting to all routes
+app.use(limiter);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
