@@ -10,6 +10,7 @@ A **lightweight** GraphQL API for fetching manga updates from [Natomanga](https:
 
 ## 📖 Table of Contents
 - [🚀 Features](#-features)
+- [🚦 Rate Limit](#-api-rate-limiting)
 - [🛠 Installation](#-installation)
   - [Prerequisites](#prerequisites)
   - [Setup](#setup)
@@ -33,6 +34,23 @@ A **lightweight** GraphQL API for fetching manga updates from [Natomanga](https:
 ✅ Efficient caching (10 mins)
 
 ✅ Fast and lightweight
+
+---
+
+## API Rate Limiting
+
+To ensure fair usage and prevent abuse, the API enforces the following rate limit:
+
+- **100 requests per 15 minutes per IP**
+- If you exceed this limit, you will receive a `429 Too Many Requests` response.
+- If you need a higher limit, please contact support.
+
+### Example Response When Rate Limit is Exceeded
+```json
+{
+  "error": "Too many requests, please slow down."
+}
+```
 
 ---
 
