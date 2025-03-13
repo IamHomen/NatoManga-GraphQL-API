@@ -1,0 +1,25 @@
+name: Query API Every 15 Minutes
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"  # Runs every 15 minutes
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  query-api:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install Dependencies
+        run: pip install requests
+
+      - name: Query API
+        run: python query_api.py
