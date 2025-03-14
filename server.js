@@ -202,9 +202,11 @@ const limiter = rateLimit({
     message: { error: "Too many requests, please try again later." },
     headers: true, // Show rate limit headers in the response
 });
-
+// ✅ Enable trust proxy
+app.set("trust proxy", 1);
 // Apply rate limiting to all routes
 app.use(limiter);
+
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
