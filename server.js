@@ -5,6 +5,8 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const cors = require("cors");
 const rateLimit = require('express-rate-limit');
+const fs = require("fs");
+const path = require("path");
 
 const schema = buildSchema(`
     type Manga {
@@ -157,6 +159,10 @@ async function fetchHotManga() {
 }
 
 const app = express();
+const CACHE_DIR = path.join(__dirname, "cache");
+
+if (!fs.existsSync(CACHE_DIR)) fs.mkdirSync(CACHE_DIR);
+
 app.use(cors());
 app.use(express.json());
 
@@ -173,10 +179,20 @@ app.use(
     })
 );
 
+// 🚀 Proxy Image with Caching
 app.get("/proxy-image", async (req, res) => {
     const imageUrl = req.query.url;
     if (!imageUrl) {
         return res.status(400).send("Missing image URL.");
+    }
+
+    const imageFileName = encodeURIComponent(imageUrl);
+    const imagePath = path.join(CACHE_DIR, imageFileName);
+
+    // ✅ Serve from disk cache if exists
+    if (fs.existsSync(imagePath)) {
+        console.log("✅ Serving from disk cache:", imagePath);
+        return res.sendFile(imagePath);
     }
 
     try {
@@ -185,30 +201,49 @@ app.get("/proxy-image", async (req, res) => {
             headers: {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
                 "Referer": "https://www.natomanga.com/",
-                "Accept-Language": "en-US,en;q=0.9"
+                "Accept-Language": "en-US,en;q=0.9",
             },
         });
 
+        fs.writeFileSync(imagePath, response.data); // ✅ Save image to disk
+
+        console.log("🚀 Fetching from source:", imageUrl);
         res.set("Content-Type", response.headers["content-type"]);
         res.send(response.data);
     } catch (error) {
-        console.error("Error fetching image:", error.message);
+        console.error("❌ Error fetching image:", error.message);
         res.status(500).send("Error fetching image.");
     }
 });
 
-// 🚀 Apply rate limiting (e.g., max 100 requests per 15 minutes per IP)
+// 🚀 Rate limiting (100 requests per 15 min)
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per window
+    windowMs: 15 * 60 * 1000,
+    max: 100,
     message: { error: "Too many requests, please try again later." },
-    headers: true, // Show rate limit headers in the response
 });
-// ✅ Enable trust proxy
 app.set("trust proxy", 1);
-// Apply rate limiting to all routes
 app.use(limiter);
 
+// ✅ Cleanup old files (auto-delete images older than 7 days)
+setInterval(() => {
+    fs.readdir(CACHE_DIR, (err, files) => {
+        if (err) return console.error("Error reading cache directory:", err);
+        const now = Date.now();
+        files.forEach((file) => {
+            const filePath = path.join(CACHE_DIR, file);
+            fs.stat(filePath, (err, stats) => {
+                if (err) return console.error("Error reading file stats:", err);
+                if (now - stats.mtimeMs > 7 * 24 * 60 * 60 * 1000) { // 7 days
+                    fs.unlink(filePath, (err) => {
+                        if (err) console.error("Error deleting file:", err);
+                        else console.log("🗑️ Deleted old cache file:", filePath);
+                    });
+                }
+            });
+        });
+    });
+}, 24 * 60 * 60 * 1000); // Run cleanup every 24 hours
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
