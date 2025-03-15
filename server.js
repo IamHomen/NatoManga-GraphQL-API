@@ -12,6 +12,7 @@ const schema = buildSchema(`
         cover: String
         author: String
         status: String
+        updated: String
         genres: [String]
         description: String
         chapters: [Chapter]
@@ -74,6 +75,7 @@ async function fetchManga(id) {
         const cover = $(".manga-info-pic img").attr("src");
         const author = $(".manga-info-text li:contains('Author') a").text().trim() || "Unknown";
         const status = $(".manga-info-text li:contains('Status')").text().replace("Status :", "").trim();
+        const updated = $(".manga-info-text li:contains('Last updated')").text().replace("Last updated :", "").trim();
         const genres = [];
         $(".manga-info-text li.genres a").each((_, el) => genres.push($(el).text().trim()));
 
@@ -88,7 +90,7 @@ async function fetchManga(id) {
             });
         });
 
-        const mangaData = { title, cover, author, status, genres, description, chapters };
+        const mangaData = { title, cover, author, status, updated, genres, description, chapters };
         mangaCache.set(id, { data: mangaData, timestamp: Date.now() });
 
         return mangaData;
