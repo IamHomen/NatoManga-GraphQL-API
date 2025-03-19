@@ -302,7 +302,7 @@ app.get("/anime/:id", async (req, res) => {
                 image: $(el).find('.col-2 > a > img').attr('src') || $(el).find('.col-2 > a > img').attr('data-src'),
                 url: `${ANIMEPAHE_BASE_URL}/anime/${$(el).find('.col-2 > a').attr('href')?.split('/')[2]}`,
                 releaseDate: $(el).find('div.col-9 > a').text().trim(),
-                status: $(el).find('div.col-9 > strong').text().trim(),
+                type: $(el).find('div.col-9 > strong').text().trim(),
                 relationType: $(el).find('h4 > span').text().trim(),
             });
         });
