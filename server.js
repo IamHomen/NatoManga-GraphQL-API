@@ -160,6 +160,7 @@ async function fetchHotManga() {
 
 const app = express();
 const CACHE_DIR = path.join(__dirname, "cache");
+const cache = new NodeCache({ stdTTL: 3600 }); // Cache for 1 hour Anime Pahe
 
 if (!fs.existsSync(CACHE_DIR)) fs.mkdirSync(CACHE_DIR);
 
@@ -244,6 +245,73 @@ setInterval(() => {
         });
     });
 }, 24 * 60 * 60 * 1000); // Run cleanup every 24 hours
+
+const BASE_URL = "https://animepahe.ru";
+
+app.get("/anime/:id", async (req, res) => {
+    try {
+        const animeId = req.params.id;
+        const cacheKey = `anime-${animeId}`;
+        const cachedData = cache.get(cacheKey);
+
+        if (cachedData) {
+            return res.json(cachedData);
+        }
+
+        const url = `${BASE_URL}/anime/${animeId}`;
+        const response = await axios.get(url);
+        const $ = cheerio.load(response.data);
+
+        const animeCover = $(".anime-cover").attr("data-src");
+        const animePoster = $(".anime-poster a").attr("href");
+        const title = $("title").text().trim();
+        const alternativeTitle = $("h2.japanese").text().trim();
+        const summary = $(".anime-summary p").text().trim();
+        const synopsis = $(".anime-synopsis p").text().trim();
+        const recommendations = [];
+
+        $(".anime-recommendations .anime-item").each((index, element) => {
+            recommendations.push({
+                title: $(element).find("a").text().trim(),
+                url: `${BASE_URL}${$(element).find("a").attr("href")}`,
+                img: $(element).find("img").attr("data-src"),
+            });
+        });
+
+        const details = {};
+        $(".anime-info .col-sm-6").each((index, element) => {
+            const label = $(element).find("b").text().trim().replace(":", "");
+            const value = $(element).text().replace(label, "").trim();
+            details[label] = value;
+        });
+
+        const episodes = [];
+        $(".episode-list a").each((index, element) => {
+            episodes.push({
+                episodeNum: $(element).text().trim(),
+                episodeUrl: `${BASE_URL}${$(element).attr("href")}`,
+            });
+        });
+
+        const animeData = {
+            animeCover,
+            animePoster,
+            title,
+            alternativeTitle,
+            summary,
+            synopsis,
+            recommendations,
+            details,
+            episodes,
+        };
+
+        cache.set(cacheKey, animeData); // Save data in cache
+        res.json(animeData);
+    } catch (error) {
+        console.error("Error fetching anime info:", error.message);
+        res.status(500).json({ error: "Failed to fetch data" });
+    }
+});
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
