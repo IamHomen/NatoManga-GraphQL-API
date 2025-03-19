@@ -269,35 +269,51 @@ app.get("/anime/:id", async (req, res) => {
         const response = await axios.get(url, { headers });
         const $ = cheerio.load(response.data);
 
-        const animeCover = $(".anime-cover").attr("data-src");
+        const animeCover = `https:${$('div.anime-cover').attr('data-src')}`;
         const animePoster = $(".anime-poster a").attr("href");
-        const title = $("title").text().trim();
+        const title = $("div.title-wrapper > h1 > span").text().trim();
         const alternativeTitle = $("h2.japanese").text().trim();
-        const summary = $(".anime-summary p").text().trim();
-        const synopsis = $(".anime-synopsis p").text().trim();
+        const description = $('div.anime-summary').text().trim();
+        const genres = animeInfo.genres = $('div.anime-genre ul li').map((i, el) => $(el).find('a').attr('title')).get();
+        const status = $('div.anime-info p:contains("Status:") a').text().trim()
+        const type = $('div.anime-info > p:contains("Type:") > a').text().trim().toUpperCase();
+        const releaseDate =  $('div.anime-info > p:contains("Aired:")').text().split('to')[0].replace('Aired:', '').trim();
+        const studios = $('div.anime-info > p:contains("Studio:")').text().replace('Studio:', '').trim().split('\n');
+        const totalEpisodes = parseInt($('div.anime-info > p:contains("Episodes:")').text().replace('Episodes:', ''));
         const recommendations = [];
 
-        $(".anime-recommendations .anime-item").each((index, element) => {
-            recommendations.push({
-                title: $(element).find("a").text().trim(),
-                url: `${BASE_URL}${$(element).find("a").attr("href")}`,
-                img: $(element).find("img").attr("data-src"),
-            });
+       $('div.anime-recommendation .col-sm-6').each((i, el) => {
+        recommendations?.push({
+          id: $(el).find('.col-2 > a').attr('href')?.split('/')[2]!,
+          title: $(el).find('.col-2 > a').attr('title')!,
+          image:
+            $(el).find('.col-2 > a > img').attr('src') || $(el).find('.col-2 > a > img').attr('data-src'),
+          url: `${this.baseUrl}/anime/${$(el).find('.col-2 > a').attr('href')?.split('/')[2]}`,
+          releaseDate: $(el).find('div.col-9 > a').text().trim(),
+          status: $(el).find('div.col-9 > strong').text().trim(),
         });
+      });
 
-        const details = {};
-        $(".anime-info .col-sm-6").each((index, element) => {
-            const label = $(element).find("b").text().trim().replace(":", "");
-            const value = $(element).text().replace(label, "").trim();
-            details[label] = value;
+      const relations = [];
+      $('div.anime-relation .col-sm-6').each((i, el) => {
+        relations?.push({
+          id: $(el).find('.col-2 > a').attr('href')?.split('/')[2]!,
+          title: $(el).find('.col-2 > a').attr('title')!,
+          image:
+            $(el).find('.col-2 > a > img').attr('src') || $(el).find('.col-2 > a > img').attr('data-src'),
+          url: `${this.ANIMEPAHE_BASE_URL}/anime/${$(el).find('.col-2 > a').attr('href')?.split('/')[2]}`,
+          releaseDate: $(el).find('div.col-9 > a').text().trim(),
+          status: $(el).find('div.col-9 > strong').text().trim(),
+          relationType: $(el).find('h4 > span').text().trim(),
         });
+      });
 
-        const episodes = [];
-        $(".episode-list a").each((index, element) => {
-            episodes.push({
-                episodeNum: $(element).text().trim(),
-                episodeUrl: `${BASE_URL}${$(element).attr("href")}`,
-            });
+      const episodes = [];
+      if (episodePage < 0) {
+        const {
+          data: { last_page, data },
+        } = await this.client.get(`${this.ANIMEPAHE_BASE_UR}/api?m=release&id=${id}&sort=episode_asc&page=1`, {
+          headers: this.Headers(id),
         });
 
         const animeData = {
@@ -305,10 +321,15 @@ app.get("/anime/:id", async (req, res) => {
             animePoster,
             title,
             alternativeTitle,
-            summary,
-            synopsis,
+            description,
+            genres,
+            status,
+            type,
+            releaseDate,
+            studios,
+            totalEpisodes,
             recommendations,
-            details,
+            relations,
             episodes,
         };
 
