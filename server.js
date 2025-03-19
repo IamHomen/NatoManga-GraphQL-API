@@ -7,6 +7,7 @@ const cors = require("cors");
 const rateLimit = require('express-rate-limit');
 const fs = require("fs");
 const path = require("path");
+const NodeCache = require("node-cache");
 
 const schema = buildSchema(`
     type Manga {
