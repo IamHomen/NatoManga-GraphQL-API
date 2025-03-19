@@ -246,7 +246,7 @@ setInterval(() => {
     });
 }, 24 * 60 * 60 * 1000); // Run cleanup every 24 hours
 
-const BASE_URL = "https://animepahe.ru";
+const ANIMEPAHE_BASE_URL = "https://animepahe.ru";
 
 app.get("/anime/:id", async (req, res) => {
     try {
@@ -258,7 +258,7 @@ app.get("/anime/:id", async (req, res) => {
             return res.json(cachedData);
         }
 
-        const url = `${BASE_URL}/anime/${animeId}`;
+        const url = `${ANIMEPAHE_BASE_URL}/anime/${animeId}`;
         const response = await axios.get(url);
         const $ = cheerio.load(response.data);
 
