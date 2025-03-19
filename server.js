@@ -264,8 +264,8 @@ app.get("/anime/:id", async (req, res) => {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
             "Referer": "https://animepahe.ru",
             "Accept-Language": "en-US,en;q=0.9",
-            "Cookie": "__ddgid_=uvwe8pkY9vVMTdG0; __ddg2_=Het8LdaILfm0B2E8; __ddg1_=MOiywMi3RBLrrGLZtxcS; res=1080; aud=jpn; av1=0; latest=5667; ann-fakesite=0; __ddg9_=110.54.144.240; __ddg10_=1742379866; __ddg8_=RkelUegxikezVZUS; XSRF-TOKEN=eyJpdiI6Ing2SkFTMWlzNy8yd1BkWlloNEY3bWc9PSIsInZhbHVlIjoiMG9KaFFQYjFTSDRTWUpSWlZpaVRkLzU1KzJzNFdGQlNZNGpOQjdISjAxYjBDWnJDalROZWI4MUZzcUs2Q3hnTDR5a1lpMi9pR05xbHBqc3FxbXFuRS9sNWpTd3UwZkdsMTRCNzN0WFFGL1E0M2tuYlF6VHkvY1NTK0tzQ29SZEMiLCJtYWMiOiJlMzhhMmJhNDQyOWRmYmMyMDYwNWE3ODAwYzExZGE3ZTI4OWIzMzE4Nzk3NWU1YTY0ZWEyYmUwN2FkM2I4NGZiIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlBSU0NyR0hMVnR0OEtSdGptdUZ4OWc9PSIsInZhbHVlIjoiY1I4NzRLVUIrL2x6b1U5b29FLzU1bUdCemlzK0RGMENBT0hzbXNCNHF6eGV1cmZTRmMwZ3V2bHluOEVNOVFJVkNxU3FGS0sxNjZyUG9xcStNNzROSUMvUTc3K1pYdlcyTHNCZjBaQ1Z2RjFWQzZ6c0N2M2Rza0FLaUpIckVVS3YiLCJtYWMiOiI5ZWI1OGZiY2E3ZjZhMmNlYWQ2Mzk5MDJmMGM4YTkxNDUyZmUwOTQ0YmJjMGRhNjVmNGQwZTBkYTFhZjY4OWMxIiwidGFnIjoiIn0%3D",
         };
+
         const response = await axios.get(url, { headers });
         const $ = cheerio.load(response.data);
 
@@ -274,47 +274,55 @@ app.get("/anime/:id", async (req, res) => {
         const title = $("div.title-wrapper > h1 > span").text().trim();
         const alternativeTitle = $("h2.japanese").text().trim();
         const description = $('div.anime-summary').text().trim();
-        const genres = animeInfo.genres = $('div.anime-genre ul li').map((i, el) => $(el).find('a').attr('title')).get();
-        const status = $('div.anime-info p:contains("Status:") a').text().trim()
+        const genres = $('div.anime-genre ul li a').map((i, el) => $(el).attr('title')).get();
+        const status = $('div.anime-info p:contains("Status:") a').text().trim();
         const type = $('div.anime-info > p:contains("Type:") > a').text().trim().toUpperCase();
-        const releaseDate =  $('div.anime-info > p:contains("Aired:")').text().split('to')[0].replace('Aired:', '').trim();
+        const releaseDate = $('div.anime-info > p:contains("Aired:")').text().split('to')[0].replace('Aired:', '').trim();
         const studios = $('div.anime-info > p:contains("Studio:")').text().replace('Studio:', '').trim().split('\n');
-        const totalEpisodes = parseInt($('div.anime-info > p:contains("Episodes:")').text().replace('Episodes:', ''));
+        const totalEpisodes = parseInt($('div.anime-info > p:contains("Episodes:")').text().replace('Episodes:', ''), 10);
+
         const recommendations = [];
-
-       $('div.anime-recommendation .col-sm-6').each((i, el) => {
-        recommendations?.push({
-          id: $(el).find('.col-2 > a').attr('href')?.split('/')[2],
-          title: $(el).find('.col-2 > a').attr('title'),
-          image:
-            $(el).find('.col-2 > a > img').attr('src') || $(el).find('.col-2 > a > img').attr('data-src'),
-          url: `${this.baseUrl}/anime/${$(el).find('.col-2 > a').attr('href')?.split('/')[2]}`,
-          releaseDate: $(el).find('div.col-9 > a').text().trim(),
-          status: $(el).find('div.col-9 > strong').text().trim(),
+        $('div.anime-recommendation .col-sm-6').each((i, el) => {
+            recommendations.push({
+                id: $(el).find('.col-2 > a').attr('href')?.split('/')[2],
+                title: $(el).find('.col-2 > a').attr('title'),
+                image: $(el).find('.col-2 > a > img').attr('src') || $(el).find('.col-2 > a > img').attr('data-src'),
+                url: `${ANIMEPAHE_BASE_URL}/anime/${$(el).find('.col-2 > a').attr('href')?.split('/')[2]}`,
+                releaseDate: $(el).find('div.col-9 > a').text().trim(),
+                status: $(el).find('div.col-9 > strong').text().trim(),
+            });
         });
-      });
 
-      const relations = [];
-      $('div.anime-relation .col-sm-6').each((i, el) => {
-        relations?.push({
-          id: $(el).find('.col-2 > a').attr('href')?.split('/')[2],
-          title: $(el).find('.col-2 > a').attr('title'),
-          image:
-            $(el).find('.col-2 > a > img').attr('src') || $(el).find('.col-2 > a > img').attr('data-src'),
-          url: `${this.ANIMEPAHE_BASE_URL}/anime/${$(el).find('.col-2 > a').attr('href')?.split('/')[2]}`,
-          releaseDate: $(el).find('div.col-9 > a').text().trim(),
-          status: $(el).find('div.col-9 > strong').text().trim(),
-          relationType: $(el).find('h4 > span').text().trim(),
+        const relations = [];
+        $('div.anime-relation .col-sm-6').each((i, el) => {
+            relations.push({
+                id: $(el).find('.col-2 > a').attr('href')?.split('/')[2],
+                title: $(el).find('.col-2 > a').attr('title'),
+                image: $(el).find('.col-2 > a > img').attr('src') || $(el).find('.col-2 > a > img').attr('data-src'),
+                url: `${ANIMEPAHE_BASE_URL}/anime/${$(el).find('.col-2 > a').attr('href')?.split('/')[2]}`,
+                releaseDate: $(el).find('div.col-9 > a').text().trim(),
+                status: $(el).find('div.col-9 > strong').text().trim(),
+                relationType: $(el).find('h4 > span').text().trim(),
+            });
         });
-      });
 
-      const episodes = [];
-      if (episodePage < 0) {
-        const {
-          data: { last_page, data },
-        } = await this.client.get(`${this.ANIMEPAHE_BASE_UR}/api?m=release&id=${id}&sort=episode_asc&page=1`, {
-          headers: this.Headers(id),
-        });
+        const episodes = [];
+
+        try {
+            const episodeApiUrl = `${ANIMEPAHE_BASE_URL}/api?m=release&id=${animeId}&sort=episode_asc&page=1`;
+            const { data } = await axios.get(episodeApiUrl, { headers });
+
+            if (data && data.data) {
+                data.data.forEach((ep) => {
+                    episodes.push({
+                        episodeNum: ep.episode,
+                        episodeUrl: `${ANIMEPAHE_BASE_URL}/play/${animeId}/${ep.session}`,
+                    });
+                });
+            }
+        } catch (episodeError) {
+            console.error("Error fetching episode data:", episodeError.message);
+        }
 
         const animeData = {
             animeCover,
