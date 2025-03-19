@@ -260,7 +260,12 @@ app.get("/anime/:id", async (req, res) => {
         }
 
         const url = `${ANIMEPAHE_BASE_URL}/anime/${animeId}`;
-        const response = await axios.get(url);
+        const headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
+            "Referer": ANIMEPAHE_BASE_URL,
+            "Accept-Language": "en-US,en;q=0.9",
+        };
+        const response = await axios.get(url, { headers });
         const $ = cheerio.load(response.data);
 
         const animeCover = $(".anime-cover").attr("data-src");
