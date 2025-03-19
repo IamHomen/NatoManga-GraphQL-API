@@ -264,6 +264,7 @@ app.get("/anime/:id", async (req, res) => {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
             "Referer": "https://animepahe.ru",
             "Accept-Language": "en-US,en;q=0.9",
+            "Cookie": "__ddgid_=uvwe8pkY9vVMTdG0; __ddg2_=Het8LdaILfm0B2E8; __ddg1_=MOiywMi3RBLrrGLZtxcS; res=1080; aud=jpn; av1=0; latest=5667; ann-fakesite=0; __ddg9_=110.54.144.240; __ddg10_=1742379866; __ddg8_=RkelUegxikezVZUS; XSRF-TOKEN=eyJpdiI6Ing2SkFTMWlzNy8yd1BkWlloNEY3bWc9PSIsInZhbHVlIjoiMG9KaFFQYjFTSDRTWUpSWlZpaVRkLzU1KzJzNFdGQlNZNGpOQjdISjAxYjBDWnJDalROZWI4MUZzcUs2Q3hnTDR5a1lpMi9pR05xbHBqc3FxbXFuRS9sNWpTd3UwZkdsMTRCNzN0WFFGL1E0M2tuYlF6VHkvY1NTK0tzQ29SZEMiLCJtYWMiOiJlMzhhMmJhNDQyOWRmYmMyMDYwNWE3ODAwYzExZGE3ZTI4OWIzMzE4Nzk3NWU1YTY0ZWEyYmUwN2FkM2I4NGZiIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IlBSU0NyR0hMVnR0OEtSdGptdUZ4OWc9PSIsInZhbHVlIjoiY1I4NzRLVUIrL2x6b1U5b29FLzU1bUdCemlzK0RGMENBT0hzbXNCNHF6eGV1cmZTRmMwZ3V2bHluOEVNOVFJVkNxU3FGS0sxNjZyUG9xcStNNzROSUMvUTc3K1pYdlcyTHNCZjBaQ1Z2RjFWQzZ6c0N2M2Rza0FLaUpIckVVS3YiLCJtYWMiOiI5ZWI1OGZiY2E3ZjZhMmNlYWQ2Mzk5MDJmMGM4YTkxNDUyZmUwOTQ0YmJjMGRhNjVmNGQwZTBkYTFhZjY4OWMxIiwidGFnIjoiIn0%3D",
         };
 
         const response = await axios.get(url, { headers });
