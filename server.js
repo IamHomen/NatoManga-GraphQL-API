@@ -284,8 +284,8 @@ app.get("/anime/:id", async (req, res) => {
 
        $('div.anime-recommendation .col-sm-6').each((i, el) => {
         recommendations?.push({
-          id: $(el).find('.col-2 > a').attr('href')?.split('/')[2]!,
-          title: $(el).find('.col-2 > a').attr('title')!,
+          id: $(el).find('.col-2 > a').attr('href')?.split('/')[2],
+          title: $(el).find('.col-2 > a').attr('title'),
           image:
             $(el).find('.col-2 > a > img').attr('src') || $(el).find('.col-2 > a > img').attr('data-src'),
           url: `${this.baseUrl}/anime/${$(el).find('.col-2 > a').attr('href')?.split('/')[2]}`,
@@ -297,8 +297,8 @@ app.get("/anime/:id", async (req, res) => {
       const relations = [];
       $('div.anime-relation .col-sm-6').each((i, el) => {
         relations?.push({
-          id: $(el).find('.col-2 > a').attr('href')?.split('/')[2]!,
-          title: $(el).find('.col-2 > a').attr('title')!,
+          id: $(el).find('.col-2 > a').attr('href')?.split('/')[2],
+          title: $(el).find('.col-2 > a').attr('title'),
           image:
             $(el).find('.col-2 > a > img').attr('src') || $(el).find('.col-2 > a > img').attr('data-src'),
           url: `${this.ANIMEPAHE_BASE_URL}/anime/${$(el).find('.col-2 > a').attr('href')?.split('/')[2]}`,
