@@ -272,13 +272,13 @@ app.get("/anime/:id", async (req, res) => {
 
         const animeCover = `https:${$('div.anime-cover').attr('data-src')}`;
         const animePoster = $(".anime-poster a").attr("href");
-        const title = $("div.title-wrapper > h1 > span").text().trim();
+        const title = $('div.title-wrapper > h1 > span').text().trim();
         const alternativeTitle = $("h2.japanese").text().trim();
         const description = $('div.anime-summary').text().trim();
         const genres = $('div.anime-genre ul li a').map((i, el) => $(el).attr('title')).get();
         const status = $('div.anime-info p:contains("Status:") a').text().trim();
         const duration = $('div.anime-info p:contains("Duration:")').text().replace('Duration:', '').trim();
-        const type = $('div.anime-info > p:contains("Type:") > a').text().trim().toUpperCase();
+        const type = $('div.anime-info > p:contains("Type:") > a').attr("title ").trim().toUpperCase();
         const releaseDate = $('div.anime-info > p:contains("Aired:")').text().split('to')[0].replace('Aired:', '').trim();
         const studios = $('div.anime-info > p:contains("Studio:")').text().replace('Studio:', '').trim().split('\n');
         const totalEpisodes = parseInt($('div.anime-info > p:contains("Episodes:")').text().replace('Episodes:', ''), 10);
