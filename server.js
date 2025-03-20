@@ -334,6 +334,7 @@ app.get("/anime/:id", async (req, res) => {
             description,
             genres,
             status,
+            duration,
             type,
             releaseDate,
             studios,
