@@ -277,6 +277,7 @@ app.get("/anime/:id", async (req, res) => {
         const description = $('div.anime-summary').text().trim();
         const genres = $('div.anime-genre ul li a').map((i, el) => $(el).attr('title')).get();
         const status = $('div.anime-info p:contains("Status:") a').text().trim();
+        const duration = $('div.anime-info p:contains("Duration:")').text().replace('Duration:', '').trim();
         const type = $('div.anime-info > p:contains("Type:") > a').text().trim().toUpperCase();
         const releaseDate = $('div.anime-info > p:contains("Aired:")').text().split('to')[0].replace('Aired:', '').trim();
         const studios = $('div.anime-info > p:contains("Studio:")').text().replace('Studio:', '').trim().split('\n');
