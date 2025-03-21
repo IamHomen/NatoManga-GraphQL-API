@@ -352,6 +352,32 @@ app.get("/anime/:id", async (req, res) => {
     }
 });
 
+//get latest updated anime
+app.get("/api", async (req, res) => {
+    const page = req.query.page || 1;
+    const cacheKey = `airing-page-${page}`;
+
+    // Check if data exists in cache
+    if (cache.has(cacheKey)) {
+        console.log(`Serving cached data for page ${page}`);
+        return res.json(cache.get(cacheKey));
+    }
+
+    const url = `https://animepahe.ru/api?m=airing&page=${page}`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        // Store response in cache
+        cache.set(cacheKey, data);
+
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch data" });
+    }
+});
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
