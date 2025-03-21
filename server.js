@@ -182,7 +182,7 @@ app.use(
     })
 );
 
-// 🚀 Proxy Image with Caching
+// 🚀 Proxy Image with Caching (Dynamic Headers)
 app.get("/proxy-image", async (req, res) => {
     const imageUrl = req.query.url;
     if (!imageUrl) {
@@ -198,14 +198,26 @@ app.get("/proxy-image", async (req, res) => {
         return res.sendFile(imagePath);
     }
 
+    // 🎯 Set headers based on the image URL
+    let headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+        "Accept-Language": "en-US,en;q=0.9",
+    };
+
+    if (imageUrl.includes("img-r1.2xstorage.com")) {
+        headers["Referer"] = "https://www.natomanga.com/";
+    } else if (imageUrl.includes("animepahe")) {
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
+            "Referer": "https://animepahe.ru/",
+            "Accept-Language": "en-US,en;q=0.9",
+        };
+    }
+
     try {
         const response = await axios.get(decodeURIComponent(imageUrl), {
             responseType: "arraybuffer",
-            headers: {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
-                "Referer": "https://www.natomanga.com/",
-                "Accept-Language": "en-US,en;q=0.9",
-            },
+            headers: headers,
         });
 
         fs.writeFileSync(imagePath, response.data); // ✅ Save image to disk
