@@ -332,6 +332,8 @@ app.get("/anime/:id", async (req, res) => {
                     episodes.push({
                         episodeNum: ep.episode,
                         episodeUrl: `${ANIMEPAHE_BASE_URL}/play/${animeId}/${ep.session}`,
+                        episodeSnapshot: ep.snapshot,
+                        episodeDuration: ep.duration,
                     });
                 });
             }
