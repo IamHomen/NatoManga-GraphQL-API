@@ -365,9 +365,15 @@ app.get("/api", async (req, res) => {
     }
 
     const url = `https://animepahe.ru/api?m=airing&page=${page}`;
+    const headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
+            "Referer": "https://animepahe.ru",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Cookie": "__ddgid_=ZsttMw1vEo9dpKs4; __ddgmark_=VtjDGlP2CCI2j7v8; __ddg2_=Het8LdaILfm0B2E8; __ddg1_=t9gTf4JDRX1bdcFpfYa8; latest=5669; __ddg9_=112.198.71.191; res=1080; aud=jpn; av1=0; __ddg8_=9ZOraGrWuc4Up7xP; __ddg10_=1742543399; XSRF-TOKEN=eyJpdiI6IjBMMDEzOFgzNjN3MjFQa013WW1COEE9PSIsInZhbHVlIjoiM0dIbUlsWG9vQ0pyTUtCbGJrZjNFangrYWZIUm1wRXg0MTd3WHJPb3dnM1FjNHFUb09XVWlVVEZIYU5WdHRKSEpHVkFiWDFSbkhJaHdidmlPSFFLN0NNZ0Q4K2Ezd2VhTGxmOFZrTWhFZ2k4SFRXaWlDL0hTNSt3WHgxd21FTWkiLCJtYWMiOiJhMTMxZTI0YmI3YTE0MzU2ZThjYjYyYTlmYmJjZWE5ZTJkYWUzMThjNDUwOTRiMmIwMDQzZTRiNGQzNTU2M2YxIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImxPVndSSXlLamJUN28zSGgwZVFCZ2c9PSIsInZhbHVlIjoiaDZURUtZeTBhYSs2dXYzcm5vclRJUVJJTzE4cjhEdmV2SDlmS3JGeFFYWGhyRTZMNUtTS3dJUUU0S2I5UGxuUkV0eXgwWXhqbHoyVFNScHdKR0J6VmtlSVZrUFpkUjJpWUFpZXpGczlXa3pFTmNDQVNlbDRlalE2bkE4eGhGNzIiLCJtYWMiOiI0MDEyZmJlZTUyNWM0YzNmZDA0OWU5NzdiZjAwMWJjZGM4ZGQzMmNjNTNkNWU5MDcwNTE5M2YwZWU1M2Q5YzZlIiwidGFnIjoiIn0%3D",
+        };
 
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, {headers} );
         const data = await response.json();
 
         // Store response in cache
