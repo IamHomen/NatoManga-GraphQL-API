@@ -161,7 +161,8 @@ async function fetchHotManga() {
 
 const app = express();
 const CACHE_DIR = path.join(__dirname, "cache");
-const cache = new NodeCache({ stdTTL: 3600 }); // Cache for 1 hour Anime Pahe
+const cache = new NodeCache({ stdTTL: 3600 }); // Cache for 1 hour AnimeInfo Pahe
+const cache2 = new NodeCache({ stdTTL: 300 }); // Cache for 1 hour AnimeLatest Pahe
 
 if (!fs.existsSync(CACHE_DIR)) fs.mkdirSync(CACHE_DIR);
 
@@ -358,9 +359,9 @@ app.get("/api", async (req, res) => {
     const cacheKey = `airing-page-${page}`;
 
     // Check if data exists in cache
-    if (cache.has(cacheKey)) {
+    if (cache2.has(cacheKey)) {
         console.log(`Serving cached data for page ${page}`);
-        return res.json(cache.get(cacheKey));
+        return res.json(cache2.get(cacheKey));
     }
 
     const url = `https://animepahe.ru/api?m=airing&page=${page}`;
@@ -370,7 +371,7 @@ app.get("/api", async (req, res) => {
         const data = await response.json();
 
         // Store response in cache
-        cache.set(cacheKey, data);
+        cache2.set(cacheKey, data);
 
         res.json(data);
     } catch (error) {
